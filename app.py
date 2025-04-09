@@ -8,7 +8,7 @@ st.set_page_config(layout="wide")
 col1, col2 = st.columns([1, 2])
 
 with col1:
-    st.header("Panel Input")
+    st.header("Romans App")
 
     name = st.text_input("Name")
     address = st.text_input("Address")
