@@ -19,12 +19,14 @@ with col1:
 
 with col2:
     st.header("Free Drawing Area ✏️")
+    stroke_color = st.color_picker("Choose drawing color", "#000000")
+
 
     # Canvas for freehand drawing
     canvas_result = st_canvas(
-        fill_color="rgba(255, 165, 0, 0.3)",
+        fill_color="rgba(255, 165, 0, 0.3)",  # Optional fill color
         stroke_width=2,
-        stroke_color="#000000",
+        stroke_color=stroke_color,  # 👈 Use chosen color here
         background_color="#ffffff",
         height=200,
         width=800,
