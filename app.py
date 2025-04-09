@@ -1,6 +1,7 @@
 import streamlit as st
 import matplotlib.pyplot as plt
 from streamlit_drawable_canvas import st_canvas
+from io import BytesIO
 
 st.set_page_config(layout="wide")
 
@@ -20,7 +21,7 @@ if clear:
     st.session_state.rectangles = []
 
 # Canvas (just to detect clicks)
-st.subheader("Click anywhere to trigger new rectangle")
+st.subheader("🖱️ Click anywhere to add rectangle (offset from last)")
 canvas_result = st_canvas(
     stroke_width=0,
     stroke_color="#000000",
@@ -54,9 +55,10 @@ if canvas_result.json_data is not None:
 st.subheader("📐 Rectangle Layout")
 fig, ax = plt.subplots(figsize=(10, 5))
 
-for x, y, w, h in st.session_state.rectangles:
+for i, (x, y, w, h) in enumerate(st.session_state.rectangles):
     rect = plt.Rectangle((x, y), w, h, edgecolor='black', facecolor='skyblue')
     ax.add_patch(rect)
+    ax.text(x + w/2, y + h/2, f"{i+1}", ha="center", va="center", fontsize=8)
 
 ax.set_xlim(0, 1000)
 ax.set_ylim(400, 0)  # Invert y-axis to match canvas
@@ -64,3 +66,13 @@ ax.set_aspect("equal")
 ax.axis("off")
 
 st.pyplot(fig)
+
+# 👉 Export to PDF
+buf = BytesIO()
+fig.savefig(buf, format="pdf", bbox_inches='tight')
+st.download_button(
+    label="📄 Export layout as PDF",
+    data=buf.getvalue(),
+    file_name="rectangles_layout.pdf",
+    mime="application/pdf"
+)
